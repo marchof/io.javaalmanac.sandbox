@@ -33,7 +33,11 @@ public class SandboxJVM {
 		commandBase.add("-Djava.security.manager=default");
 		commandBase.add("-Djava.security.policy==" + localPolicyFile);
 	}
-	
+
+	public void setSandboxClassLoader() {
+		commandBase.add("-Djava.system.class.loader=" + SandboxClassLoader.class.getName());
+	}
+
 	public void setDenyAllSecurityPolicy() throws IOException {
 		setSecurityPolicy("grant{};");
 	}
@@ -42,7 +46,7 @@ public class SandboxJVM {
 		commandBase.add("-cp");
 		commandBase.add(path);
 	}
-	
+
 	public void setDefaultEncoding(Charset encoding) {
 		commandBase.add("-Dfile.encoding=" + encoding);
 	}
@@ -50,22 +54,22 @@ public class SandboxJVM {
 	public void inheritClassPath() {
 		setClassPath(System.getProperty("java.class.path"));
 	}
-	
+
 	public void setMaxHeap(int megabyte) {
 		commandBase.add("-Xmx" + megabyte + "m");
 	}
-	
+
 	public void addParam(String param) {
 		commandBase.add(param);
 	}
-	
+
 	public Process run(String mainClass) throws IOException {
 		List<String> cmd = new ArrayList<>(commandBase);
 		cmd.add(mainClass);
 		ProcessBuilder builder = new ProcessBuilder(cmd);
 		return builder.start();
 	}
-	
+
 	public static boolean waitFor(Process process, long timeout, TimeUnit unit) throws InterruptedException {
 		boolean success = process.waitFor(timeout, unit);
 		if (!success) {
