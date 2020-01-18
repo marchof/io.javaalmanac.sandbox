@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.AccessControlException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import io.javaalmanac.sandbox.InMemoryCompiler.Result;
 import io.javaalmanac.sandbox.attacks.GetSystemProperties;
 import io.javaalmanac.sandbox.attacks.ReadFile;
+import io.javaalmanac.sandbox.attacks.TooMuchMemory;
 import io.javaalmanac.sandbox.attacks.WriteSystemProperty;
 
 /**
@@ -41,11 +43,20 @@ public class AttacksTest {
 		expectAccessControlException(ReadFile.class, "FilePermission");
 	}
 
+	@Test
+	void too_much_memory() throws Exception {
+		expectException(TooMuchMemory.class, OutOfMemoryError.class);
+	}
+
 	private void expectAccessControlException(Class<?> target, String permission) throws Exception {
+		expectException(target, AccessControlException.class);
+		assertThat(output, containsString(permission));
+	}
+
+	private void expectException(Class<?> target, Class<?> exception) throws Exception {
 		runInSandbox(target);
 		assertEquals(1, process.exitValue());
-		assertThat(output, containsString("java.security.AccessControlException"));
-		assertThat(output, containsString(permission));
+		assertThat(output, containsString(exception.getName()));
 	}
 
 	private void runInSandbox(Class<?> target) throws Exception {
