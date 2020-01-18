@@ -1,7 +1,6 @@
 package io.javaalmanac.sandbox;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,22 +23,8 @@ public class SandboxJVM {
 		commandBase.add(getJavaExecutable());
 	}
 
-	public void setSecurityPolicy(String policy) throws IOException {
-		Path localPolicyFile = Files.createTempFile("sandbox", ".policy");
-		localPolicyFile.toFile().deleteOnExit();
-		try (Writer writer = Files.newBufferedWriter(localPolicyFile)) {
-			writer.write(policy);
-		}
-		commandBase.add("-Djava.security.manager=default");
-		commandBase.add("-Djava.security.policy==" + localPolicyFile);
-	}
-
 	public void setSandboxClassLoader() {
 		commandBase.add("-Djava.system.class.loader=" + SandboxClassLoader.class.getName());
-	}
-
-	public void setDenyAllSecurityPolicy() throws IOException {
-		setSecurityPolicy("grant{};");
 	}
 
 	public void setClassPath(String path) {
@@ -47,12 +32,12 @@ public class SandboxJVM {
 		commandBase.add(path);
 	}
 
-	public void setDefaultEncoding(Charset encoding) {
-		commandBase.add("-Dfile.encoding=" + encoding);
-	}
-
 	public void inheritClassPath() {
 		setClassPath(System.getProperty("java.class.path"));
+	}
+
+	public void setDefaultEncoding(Charset encoding) {
+		commandBase.add("-Dfile.encoding=" + encoding);
 	}
 
 	public void setMaxHeap(int megabyte) {

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import io.javaalmanac.sandbox.InMemoryCompiler.Result;
 import io.javaalmanac.sandbox.attacks.GetSystemProperties;
+import io.javaalmanac.sandbox.attacks.OpenUrl;
 import io.javaalmanac.sandbox.attacks.ReadFile;
 import io.javaalmanac.sandbox.attacks.TooMuchMemory;
 import io.javaalmanac.sandbox.attacks.WriteSystemProperty;
@@ -41,6 +42,11 @@ public class AttacksTest {
 	@Test
 	void read_file() throws Exception {
 		expectAccessControlException(ReadFile.class, "FilePermission");
+	}
+
+	@Test
+	void open_url() throws Exception {
+		expectAccessControlException(OpenUrl.class, "SocketPermission");
 	}
 
 	@Test
