@@ -1,4 +1,4 @@
-package io.javaalmanac.sandbox;
+package io.javaalmanac.sandbox.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -13,12 +13,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
-import io.javaalmanac.sandbox.InMemoryCompiler.Result;
 import io.javaalmanac.sandbox.attacks.GetSystemProperties;
 import io.javaalmanac.sandbox.attacks.OpenUrl;
 import io.javaalmanac.sandbox.attacks.ReadFile;
 import io.javaalmanac.sandbox.attacks.TooMuchMemory;
 import io.javaalmanac.sandbox.attacks.WriteSystemProperty;
+import io.javaalmanac.sandbox.impl.InMemoryCompiler;
+import io.javaalmanac.sandbox.impl.InMemoryCompiler.Result;
 
 /**
  * Verifies that different attacks result in termination of target vm.

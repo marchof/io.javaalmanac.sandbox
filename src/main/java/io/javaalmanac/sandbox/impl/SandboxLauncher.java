@@ -1,4 +1,4 @@
-package io.javaalmanac.sandbox;
+package io.javaalmanac.sandbox.impl;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

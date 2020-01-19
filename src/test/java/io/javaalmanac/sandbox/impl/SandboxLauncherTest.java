@@ -1,4 +1,4 @@
-package io.javaalmanac.sandbox;
+package io.javaalmanac.sandbox.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import io.javaalmanac.sandbox.impl.SandboxLauncher;
 
 public class SandboxLauncherTest {
 

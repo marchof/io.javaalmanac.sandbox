@@ -1,4 +1,4 @@
-package io.javaalmanac.sandbox;
+package io.javaalmanac.sandbox.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -12,7 +12,8 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.javaalmanac.sandbox.InMemoryCompiler.Result;
+import io.javaalmanac.sandbox.impl.InMemoryCompiler;
+import io.javaalmanac.sandbox.impl.InMemoryCompiler.Result;
 
 public class InMemoryCompilerTest {
 
