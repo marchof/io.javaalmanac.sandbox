@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * Forks an new JVM from the currently used JDK installation.
  */
-public class SandboxJVM {
+public class SandboxLauncher {
 
 	private static final String[] JAVA_EXECUTABLE_NAME = new String[] { "java", "java.exe" };
 
 	private final List<String> commandBase;
 
-	public SandboxJVM() {
+	public SandboxLauncher() {
 		commandBase = new ArrayList<>();
 		commandBase.add(getJavaExecutable());
 	}

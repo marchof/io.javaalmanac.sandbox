@@ -9,13 +9,13 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class SandboxJVMTest {
+public class SandboxLauncherTest {
 
-	private SandboxJVM sandbox;
+	private SandboxLauncher sandbox;
 
 	@BeforeEach
 	void setup() {
-		sandbox = new SandboxJVM();
+		sandbox = new SandboxLauncher();
 		sandbox.inheritClassPath();
 		sandbox.setDefaultEncoding(StandardCharsets.UTF_8);
 	}

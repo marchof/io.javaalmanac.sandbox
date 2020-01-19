@@ -73,7 +73,7 @@ public class AttacksTest {
 		Result result = compiler.compile();
 		assertTrue(result.isSuccess());
 
-		SandboxJVM sandbox = new SandboxJVM();
+		SandboxLauncher sandbox = new SandboxLauncher();
 		sandbox.setMaxHeap(4);
 		sandbox.inheritClassPath();
 		sandbox.setSandboxClassLoader();
@@ -84,7 +84,7 @@ public class AttacksTest {
 		output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8)
 				+ new String(process.getErrorStream().readAllBytes(), StandardCharsets.UTF_8);
 
-		SandboxJVM.waitFor(process, 2, TimeUnit.SECONDS);
+		SandboxLauncher.waitFor(process, 2, TimeUnit.SECONDS);
 	}
 
 }
