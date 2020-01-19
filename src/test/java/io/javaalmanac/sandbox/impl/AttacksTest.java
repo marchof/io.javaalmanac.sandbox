@@ -5,30 +5,26 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.AccessControlException;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
 import io.javaalmanac.sandbox.attacks.GetSystemProperties;
 import io.javaalmanac.sandbox.attacks.OpenUrl;
 import io.javaalmanac.sandbox.attacks.ReadFile;
+import io.javaalmanac.sandbox.attacks.StartManyThreads;
 import io.javaalmanac.sandbox.attacks.TooMuchMemory;
+import io.javaalmanac.sandbox.attacks.TooMuchOutput;
 import io.javaalmanac.sandbox.attacks.WriteSystemProperty;
-import io.javaalmanac.sandbox.impl.InMemoryCompiler;
-import io.javaalmanac.sandbox.impl.InMemoryCompiler.Result;
 
 /**
  * Verifies that different attacks result in termination of target vm.
  */
 public class AttacksTest {
 
-	private Process process;
-
-	private String output;
+	private SandboxLauncher.Result result;
 
 	@Test
 	void get_system_properties() throws Exception {
@@ -55,15 +51,32 @@ public class AttacksTest {
 		expectException(TooMuchMemory.class, OutOfMemoryError.class);
 	}
 
+	@Test
+	void start_many_threads() throws Exception {
+		expectTimeout(StartManyThreads.class);
+	}
+
+	@Test
+	void too_much_output() throws Exception {
+		expectTimeout(TooMuchOutput.class);
+		assertThat(result.getOutput(), containsString("more and more and more"));
+		assertTrue(result.getOutput().length() <= 0x1000);
+	}
+
 	private void expectAccessControlException(Class<?> target, String permission) throws Exception {
 		expectException(target, AccessControlException.class);
-		assertThat(output, containsString(permission));
+		assertThat(result.getOutput(), containsString(permission));
 	}
 
 	private void expectException(Class<?> target, Class<?> exception) throws Exception {
 		runInSandbox(target);
-		assertEquals(1, process.exitValue());
-		assertThat(output, containsString(exception.getName()));
+		assertEquals(1, result.getStatus());
+		assertThat(result.getOutput(), containsString(exception.getName()));
+	}
+
+	private void expectTimeout(Class<?> target) throws Exception {
+		runInSandbox(target);
+		assertTrue(result.isTimeout());
 	}
 
 	private void runInSandbox(Class<?> target) throws Exception {
@@ -71,21 +84,12 @@ public class AttacksTest {
 
 		InMemoryCompiler compiler = new InMemoryCompiler();
 		compiler.addSource(source, Files.readString(Path.of("src/test/java", source)));
-		Result result = compiler.compile();
-		assertTrue(result.isSuccess());
+		InMemoryCompiler.Result compileResult = compiler.compile();
+		assertTrue(compileResult.isSuccess());
 
 		SandboxLauncher sandbox = new SandboxLauncher();
-		sandbox.setMaxHeap(4);
-		sandbox.inheritClassPath();
-		sandbox.setSandboxClassLoader();
 
-		process = sandbox.run(target.getName());
-		result.writeJar(process.getOutputStream());
-
-		output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8)
-				+ new String(process.getErrorStream().readAllBytes(), StandardCharsets.UTF_8);
-
-		SandboxLauncher.waitFor(process, 2, TimeUnit.SECONDS);
+		result = sandbox.run(target.getName(), compileResult.getClassfiles());
 	}
 
 }

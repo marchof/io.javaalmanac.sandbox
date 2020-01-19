@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarOutputStream;
-import java.util.zip.ZipEntry;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
@@ -76,15 +74,6 @@ public class InMemoryCompiler {
 
 		public Map<String, byte[]> getClassfiles() {
 			return classfiles;
-		}
-
-		public void writeJar(OutputStream out) throws IOException {
-			try (JarOutputStream jar = new JarOutputStream(out)) {
-				for (Map.Entry<String, byte[]> e : classfiles.entrySet()) {
-					jar.putNextEntry(new ZipEntry(e.getKey()));
-					jar.write(e.getValue());
-				}
-			}
 		}
 
 		@Override
