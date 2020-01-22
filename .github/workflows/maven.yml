@@ -1,9 +1,9 @@
-name: Java CI
+name: CI
 
 on: [push]
 
 jobs:
-  build:
+  build-mvn:
 
     runs-on: ubuntu-latest
 
@@ -15,3 +15,20 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Upload jar
+      uses: actions/upload-artifact@v1
+      with:
+        name: sandbox.jar
+        path: target/sandbox.jar
+
+  build-docker:
+
+    needs: build-mvn
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download jar
+      uses: actions/download-artifact@v1
+      with:
+        name: sandbox.jar
+        path: docker/sandbox.jar
