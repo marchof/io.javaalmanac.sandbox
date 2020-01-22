@@ -48,7 +48,7 @@ jobs:
         ECR_REPOSITORY: javaalmanac/sandbox
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t sandbox docker
+        docker build --build-arg java_version=11 -t sandbox docker
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
