@@ -26,6 +26,10 @@ jobs:
     needs: build-mvn
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        java_version: [11, 12, 13]
+
     steps:
     - uses: actions/checkout@v1
     - name: Download jar
@@ -46,13 +50,14 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: javaalmanac/sandbox
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: ${{ github.sha }}-${{ matrix.java_version }}
+        LATEST_TAG: latest-${{ matrix.java_version }}
       run: |
-        docker build --build-arg java_version=11 -t sandbox docker
+        docker build --build-arg java_version=${{ matrix.java_version }} -t sandbox docker
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
     - name: Logout of Amazon ECR
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
