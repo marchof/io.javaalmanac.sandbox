@@ -72,6 +72,12 @@ public class InMemoryCompiler {
 			return messages;
 		}
 
+		public String getMessagesAsText() {
+			StringBuilder result = new StringBuilder();
+			messages.forEach(result::append);
+			return result.toString();
+		}
+
 		public Map<String, byte[]> getClassfiles() {
 			return classfiles;
 		}
