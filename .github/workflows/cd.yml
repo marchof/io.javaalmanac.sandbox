@@ -36,7 +36,7 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: sandbox.jar
-        path: docker/sandbox.jar
+        path: docker
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
