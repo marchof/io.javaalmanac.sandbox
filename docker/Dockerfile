@@ -5,8 +5,8 @@ FROM adoptopenjdk/openjdk${java_version}
 RUN apt update && apt install -y zip
 
 WORKDIR /
-COPY sandbox.jar sandbox.jar
+COPY sandbox.jar /sandbox.jar
 
 EXPOSE 8000
 
-CMD pwd && unzip -l sandbox.jar
+CMD pwd && ls -al
