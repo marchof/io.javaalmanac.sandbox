@@ -9,4 +9,4 @@ COPY sandbox.jar /sandbox.jar
 
 EXPOSE 8000
 
-CMD pwd && ls -al && unzip -l /sandbox.jar
+CMD pwd && ls /sandbox.jar
