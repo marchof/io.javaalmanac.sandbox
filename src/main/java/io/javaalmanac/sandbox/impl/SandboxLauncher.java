@@ -43,7 +43,7 @@ public class SandboxLauncher {
 
 	}
 
-	private static final int TIMEOUT_SEC = 1;
+	private static final int TIMEOUT_SEC = 10;
 
 	private static final int MAXHEAP_MB = 16;
 
