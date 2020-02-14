@@ -61,6 +61,7 @@ public class SandboxLauncher {
 		commandBase.add(getDefaultEncodingArg());
 		commandBase.add(getMaxHeapArg());
 		commandBase.add(getClassDataSharingArg());
+		commandBase.add(getDisableOptimizationArg());
 	}
 
 	private String getSandboxClassLoaderArg() {
@@ -78,9 +79,13 @@ public class SandboxLauncher {
 	private String getMaxHeapArg() {
 		return "-Xmx" + MAXHEAP_MB + "m";
 	}
-	
+
 	private String getClassDataSharingArg() {
 		return "-Xshare:off";
+	}
+
+	private String getDisableOptimizationArg() {
+		return "-XX:TieredStopAtLevel=1";
 	}
 
 	public Result run(String mainClass, Map<String, byte[]> classfiles) throws IOException, InterruptedException {
