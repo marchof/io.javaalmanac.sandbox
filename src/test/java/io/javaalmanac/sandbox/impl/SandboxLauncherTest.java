@@ -67,4 +67,15 @@ public class SandboxLauncherTest {
 		}
 	}
 
+	@Test
+	void should_not_produce_additional_output() throws Exception {
+		run(NoOutput.class);
+		assertEquals("", result.getOutput());
+	}
+
+	public static class NoOutput {
+		public static void main(String[] args) throws InterruptedException {
+		}
+	}
+
 }
