@@ -74,7 +74,7 @@ public class InMemoryCompiler {
 
 		public String getMessagesAsText() {
 			StringBuilder result = new StringBuilder();
-			messages.forEach(result::append);
+			messages.forEach(d -> result.append(d).append('\n'));
 			return result.toString();
 		}
 
