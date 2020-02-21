@@ -1,6 +1,4 @@
-ARG java_version
-
-FROM adoptopenjdk/openjdk${java_version}
+FROM adoptopenjdk/openjdk11
 
 COPY sandbox.jar /sandbox.jar
 
