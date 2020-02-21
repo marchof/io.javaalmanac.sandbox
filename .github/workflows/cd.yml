@@ -56,7 +56,7 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}-${{ matrix.java_version }}
         LATEST_TAG: latest-${{ matrix.java_version }}
       run: |
-        docker build -f=docker/Dockerfile.${{ matrix.java_version }} -t sandbox docker
+        docker build -f docker/Dockerfile.${{ matrix.java_version }} -t sandbox docker
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
