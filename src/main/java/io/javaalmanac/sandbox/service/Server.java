@@ -10,7 +10,7 @@ public class Server {
 			config.enableCorsForOrigin("http://localhost", "https://javaalmanac.io/", "https://www.javaalmanac.io/");
 		}).start(port);
 		app.get("/health", ctx -> ctx.result("ok"));
-		app.get("/version", ctx -> ctx.result(System.getProperty("java.version")));
+		app.get("/version", ctx -> ctx.result(System.getProperty("java.vm.version")));
 		app.post("/compileandrun", new CompileAndRunHandler());
 	}
 
