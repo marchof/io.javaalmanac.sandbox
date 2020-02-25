@@ -78,4 +78,11 @@ public class SandboxLauncherTest {
 		}
 	}
 
+	@Test
+	void should_run_with_preview() throws Exception {
+		sandbox.enablePreview();
+		run(NoOutput.class);
+		assertEquals("", result.getOutput());
+	}
+
 }

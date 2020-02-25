@@ -17,6 +17,9 @@ public class CompileAndRunHandler implements Handler {
 		CompileAndRunReponse response = new CompileAndRunReponse();
 
 		InMemoryCompiler compiler = new InMemoryCompiler();
+		if (request.preview) {
+			compiler.enablePreview();
+		}
 		for (SourceFile s : request.sourcefiles) {
 			compiler.addSource(s.name, s.content);
 		}
@@ -27,6 +30,9 @@ public class CompileAndRunHandler implements Handler {
 
 		if (cmpresult.isSuccess()) {
 			SandboxLauncher sandbox = new SandboxLauncher();
+			if (request.preview) {
+				sandbox.enablePreview();
+			}
 			SandboxLauncher.Result runResult = sandbox.run(request.mainclass, cmpresult.getClassfiles());
 			response.runstatus = runResult.getStatus();
 			response.output += runResult.getOutput();

@@ -64,6 +64,10 @@ public class SandboxLauncher {
 		commandBase.add(getDisableOptimizationArg());
 	}
 
+	public void enablePreview() {
+		commandBase.add("--enable-preview");
+	}
+
 	private String getSandboxClassLoaderArg() {
 		return "-Djava.system.class.loader=" + SandboxClassLoader.class.getName();
 	}

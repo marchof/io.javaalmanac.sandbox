@@ -8,4 +8,6 @@ public class CompileAndRunRequest {
 
 	public String mainclass;
 
+	public boolean preview;
+
 }

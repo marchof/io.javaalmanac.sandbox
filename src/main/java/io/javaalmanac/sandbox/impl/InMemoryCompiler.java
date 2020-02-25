@@ -39,15 +39,23 @@ public class InMemoryCompiler {
 
 	private final List<JavaFileObject> compilationUnits = new ArrayList<>();
 
+	private final List<String> options = new ArrayList<>();
+
 	public void addSource(String filename, String content) {
 		compilationUnits.add(new MemoryFile(Kind.SOURCE, filename, content));
+	}
+
+	public void enablePreview() {
+		options.add("--enable-preview");
+		options.add("--release");
+		options.add(System.getProperty("java.specification.version"));
 	}
 
 	public Result compile() {
 		final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		List<Diagnostic<? extends JavaFileObject>> messages = new ArrayList<Diagnostic<? extends JavaFileObject>>();
 		final MemoryFileManager fileManager = new MemoryFileManager(compiler);
-		boolean success = compiler.getTask(null, fileManager, messages::add, null, null, compilationUnits).call();
+		boolean success = compiler.getTask(null, fileManager, messages::add, options, null, compilationUnits).call();
 		return new Result(success, messages, fileManager.output);
 	}
 

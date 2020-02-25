@@ -12,7 +12,6 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.javaalmanac.sandbox.impl.InMemoryCompiler;
 import io.javaalmanac.sandbox.impl.InMemoryCompiler.Result;
 
 public class InMemoryCompilerTest {
@@ -61,6 +60,16 @@ public class InMemoryCompilerTest {
 		assertThat(result.getMessages(), empty());
 		assertTrue(result.isSuccess());
 		assertEquals(Set.of("MySet.class"), result.getClassfiles().keySet());
+	}
+
+	@Test
+	void should_compile_with_preview() throws IOException {
+		compiler.enablePreview();
+		compiler.addSource("Foo.java", "class Foo { }");
+		result = compiler.compile();
+		assertThat(result.getMessages(), empty());
+		assertTrue(result.isSuccess());
+		assertEquals(Set.of("Foo.class"), result.getClassfiles().keySet());
 	}
 
 	@Test
