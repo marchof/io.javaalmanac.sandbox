@@ -49,6 +49,7 @@ public class InMemoryCompiler {
 		options.add("--enable-preview");
 		options.add("--release");
 		options.add(System.getProperty("java.specification.version"));
+		options.add("-Xlint:preview");
 	}
 
 	public Result compile() {
