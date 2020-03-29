@@ -1,6 +1,6 @@
 package io.javaalmanac.sandbox.api;
 
-public class CompileAndRunReponse {
+public class CompileAndRunResponse {
 
 	public boolean compilesuccess = false;
 
