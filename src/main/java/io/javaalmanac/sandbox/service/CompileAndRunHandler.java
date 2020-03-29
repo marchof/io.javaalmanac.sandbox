@@ -1,6 +1,6 @@
 package io.javaalmanac.sandbox.service;
 
-import io.javaalmanac.sandbox.api.CompileAndRunReponse;
+import io.javaalmanac.sandbox.api.CompileAndRunResponse;
 import io.javaalmanac.sandbox.api.CompileAndRunRequest;
 import io.javaalmanac.sandbox.api.SourceFile;
 import io.javaalmanac.sandbox.impl.InMemoryCompiler;
@@ -14,7 +14,7 @@ public class CompileAndRunHandler implements Handler {
 	public void handle(Context ctx) throws Exception {
 
 		CompileAndRunRequest request = ctx.bodyAsClass(CompileAndRunRequest.class);
-		CompileAndRunReponse response = new CompileAndRunReponse();
+		CompileAndRunResponse response = new CompileAndRunResponse();
 
 		InMemoryCompiler compiler = new InMemoryCompiler();
 		if (request.preview) {
