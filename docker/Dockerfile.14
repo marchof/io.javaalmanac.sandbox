@@ -1,4 +1,4 @@
-FROM openjdk:14
+FROM adoptopenjdk/openjdk14
 
 COPY sandbox.jar /sandbox.jar
 
