@@ -12,7 +12,12 @@ public class Server {
 	public static void main(String[] args) {
 		int port = Integer.parseInt(System.getenv("PORT"));
 		Javalin app = Javalin.create(config -> {
-			config.enableCorsForOrigin("http://localhost", "https://javaalmanac.io/", "https://www.javaalmanac.io/");
+			config.enableCorsForOrigin(//
+					"http://localhost", //
+					"https://javaalmanac.io/", //
+					"https://www.javaalmanac.io/", //
+					"https://horstmann.com/", //
+					"https://www.horstmann.com/");
 			config.requestLogger((ctx, ms) -> {
 				LOG.info("{} \"{} {} {}\" {} in {}ms", //
 						ctx.ip(), ctx.method(), ctx.path(), ctx.protocol(), ctx.res.getStatus(), ms);
