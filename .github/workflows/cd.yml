@@ -31,7 +31,17 @@ jobs:
 
     strategy:
       matrix:
-        java_version: [11, 12, 13, 14, 15]
+        jdk:
+          - version: 11
+            image: adoptopenjdk/openjdk11
+          - version: 12
+            image: adoptopenjdk/openjdk12
+          - version: 13
+            image: adoptopenjdk/openjdk13
+          - version: 14
+            image: adoptopenjdk/openjdk14
+          - version: 15
+            image: openjdk:15
 
     steps:
     - uses: actions/checkout@v1
@@ -53,10 +63,11 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: javaalmanac/sandbox
-        IMAGE_TAG: ${{ github.sha }}-${{ matrix.java_version }}
-        LATEST_TAG: latest-${{ matrix.java_version }}
+        IMAGE_TAG: ${{ github.sha }}-${{ matrix.jdk.version }}
+        LATEST_TAG: latest-${{ matrix.jdk.version }}
+        JDK_IMAGE: ${{ matrix.jdk.image }}
       run: |
-        docker build -f docker/Dockerfile.${{ matrix.java_version }} -t sandbox docker
+        docker build --build-arg JDK_IMAGE=$JDK_IMAGE -t sandbox docker
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
