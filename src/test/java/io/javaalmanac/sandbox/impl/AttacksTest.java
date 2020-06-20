@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import io.javaalmanac.sandbox.attacks.GetSystemProperties;
 import io.javaalmanac.sandbox.attacks.OpenUrl;
 import io.javaalmanac.sandbox.attacks.ReadFile;
+import io.javaalmanac.sandbox.attacks.RuntimeExec;
 import io.javaalmanac.sandbox.attacks.StartManyThreads;
+import io.javaalmanac.sandbox.attacks.StartProcess;
 import io.javaalmanac.sandbox.attacks.TooMuchMemory;
 import io.javaalmanac.sandbox.attacks.TooMuchOutput;
 import io.javaalmanac.sandbox.attacks.WriteSystemProperty;
@@ -44,6 +46,16 @@ public class AttacksTest {
 	@Test
 	void open_url() throws Exception {
 		expectAccessControlException(OpenUrl.class, "SocketPermission");
+	}
+
+	@Test
+	void process_start() throws Exception {
+		expectAccessControlException(StartProcess.class, "FilePermission");
+	}
+
+	@Test
+	void runtime_exec() throws Exception {
+		expectAccessControlException(RuntimeExec.class, "FilePermission");
 	}
 
 	@Test
