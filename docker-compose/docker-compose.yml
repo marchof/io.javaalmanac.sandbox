@@ -1,0 +1,44 @@
+version: '3'
+services:
+  java11:
+    image: 830482727482.dkr.ecr.eu-central-1.amazonaws.com/javaalmanac/sandbox:latest-11
+    ports:
+      - '8011:8011'
+    environment:
+      PORT: 8011
+    restart: always
+  java12:
+    image: 830482727482.dkr.ecr.eu-central-1.amazonaws.com/javaalmanac/sandbox:latest-12
+    ports:
+      - '8012:8012'
+    environment:
+      PORT: 8012
+    restart: always
+  java13:
+    image: 830482727482.dkr.ecr.eu-central-1.amazonaws.com/javaalmanac/sandbox:latest-13
+    ports:
+      - '8013:8013'
+    environment:
+      PORT: 8013
+    restart: always
+  java14:
+    image: 830482727482.dkr.ecr.eu-central-1.amazonaws.com/javaalmanac/sandbox:latest-14
+    ports:
+      - '8014:8014'
+    environment:
+      PORT: 8014
+    restart: always
+  java15:
+    image: 830482727482.dkr.ecr.eu-central-1.amazonaws.com/javaalmanac/sandbox:latest-15
+    ports:
+      - '8015:8015'
+    environment:
+      PORT: 8015
+    restart: always
+  java16:
+    image: 830482727482.dkr.ecr.eu-central-1.amazonaws.com/javaalmanac/sandbox:latest-16
+    ports:
+      - '8016:8016'
+    environment:
+      PORT: 8016
+    restart: always
