@@ -24,7 +24,7 @@ public class Server {
 			});
 		}).start(port);
 		app.get("/health", ctx -> ctx.result("ok"));
-		app.get("/version", ctx -> ctx.result(System.getProperty("java.vm.version")));
+		app.get("/version", new VersionHandler());
 		app.post("/compileandrun", new CompileAndRunHandler());
 	}
 
