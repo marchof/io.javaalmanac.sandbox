@@ -96,6 +96,8 @@ public class SandboxLauncher {
 		List<String> cmd = new ArrayList<>(commandBase);
 		cmd.add(mainClass);
 		ProcessBuilder builder = new ProcessBuilder(cmd);
+		// Do not inherit environment variables
+		builder.environment().clear();
 		builder.redirectErrorStream(true);
 
 		Process process = builder.start();
