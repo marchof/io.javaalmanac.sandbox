@@ -40,7 +40,7 @@ public class SandboxClassLoader extends ClassLoader {
 
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
-		final byte[] bytes = classfiles.get(name + ".class");
+		final byte[] bytes = classfiles.get(name.replace('.', '/') + ".class");
 		return bytes == null ? super.findClass(name) : defineClass(name, bytes, 0, bytes.length);
 	}
 
