@@ -1,5 +1,6 @@
 package io.javaalmanac.sandbox.impl;
 
+import java.io.FilePermission;
 import java.io.IOException;
 import java.security.PermissionCollection;
 import java.security.Permissions;
@@ -32,7 +33,9 @@ public class SandboxClassLoader extends ClassLoader {
 		Policy.setPolicy(new Policy() {
 			@Override
 			public PermissionCollection getPermissions(ProtectionDomain domain) {
-				return new Permissions();
+				Permissions permissions = new Permissions();
+				permissions.add(new FilePermission("<<ALL FILES>>", "read"));
+				return permissions;
 			}
 		});
 		System.setSecurityManager(new SecurityManager());

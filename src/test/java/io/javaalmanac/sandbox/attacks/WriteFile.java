@@ -1,13 +1,13 @@
 package io.javaalmanac.sandbox.attacks;
 
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ReadFile {
+public class WriteFile {
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) throws IOException {
-		new FileInputStream("secret");
+		new FileOutputStream("out.txt");
 	}
 
 }

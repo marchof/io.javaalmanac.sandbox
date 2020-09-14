@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 
 import io.javaalmanac.sandbox.attacks.GetSystemProperties;
 import io.javaalmanac.sandbox.attacks.OpenUrl;
-import io.javaalmanac.sandbox.attacks.ReadFile;
 import io.javaalmanac.sandbox.attacks.RuntimeExec;
 import io.javaalmanac.sandbox.attacks.StartManyThreads;
 import io.javaalmanac.sandbox.attacks.StartProcess;
 import io.javaalmanac.sandbox.attacks.TooMuchMemory;
 import io.javaalmanac.sandbox.attacks.TooMuchOutput;
+import io.javaalmanac.sandbox.attacks.WriteFile;
 import io.javaalmanac.sandbox.attacks.WriteSystemProperty;
 
 /**
@@ -39,8 +39,8 @@ public class AttacksTest {
 	}
 
 	@Test
-	void read_file() throws Exception {
-		expectAccessControlException(ReadFile.class, "FilePermission");
+	void write_file() throws Exception {
+		expectAccessControlException(WriteFile.class, "FilePermission");
 	}
 
 	@Test
