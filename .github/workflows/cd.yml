@@ -43,7 +43,7 @@ jobs:
           - version: 14
             image: adoptopenjdk/openjdk14
           - version: 15
-            image: openjdk:15
+            image: adoptopenjdk/openjdk15
           - version: 16
             image: openjdk:16
 
