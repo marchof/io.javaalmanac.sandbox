@@ -76,3 +76,15 @@ jobs:
     - name: Logout of Amazon ECR
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
+
+  update-services:
+    needs: build-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Sandbox Services
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.SANDBOX_HOST }}
+          username: ${{ secrets.SANDBOX_USERNAME }}
+          key: ${{ secrets.SANDBOX_KEY }}
+          script: /home/ec2-user/javasandbox/update
