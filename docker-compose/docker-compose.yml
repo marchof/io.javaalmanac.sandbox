@@ -42,3 +42,11 @@ services:
     environment:
       PORT: 8016
     restart: always
+  java17:
+    image: ${AWS_REGISTRY}/javaalmanac/sandbox:latest-17
+    ports:
+      - '8017:8017'
+    environment:
+      PORT: 8017
+    restart: always
+    

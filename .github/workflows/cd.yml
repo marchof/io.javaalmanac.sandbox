@@ -46,6 +46,8 @@ jobs:
             image: adoptopenjdk/openjdk15
           - version: 16
             image: openjdk:16
+          - version: 17
+            image: openjdk:17
 
     steps:
     - uses: actions/checkout@v1
