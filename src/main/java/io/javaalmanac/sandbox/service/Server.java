@@ -10,7 +10,6 @@ public class Server {
 	private static final Logger LOG = LoggerFactory.getLogger("access");
 
 	public static void main(String[] args) {
-		int port = Integer.parseInt(System.getenv("PORT"));
 		Javalin app = Javalin.create(config -> {
 			config.enableCorsForOrigin(//
 					"http://localhost", //
@@ -22,7 +21,7 @@ public class Server {
 				LOG.info("{} \"{} {} {}\" {} in {}ms", //
 						ctx.ip(), ctx.method(), ctx.path(), ctx.protocol(), ctx.res.getStatus(), ms);
 			});
-		}).start(port);
+		}).start(80);
 		app.get("/health", ctx -> ctx.result("ok"));
 		app.get("/version", new VersionHandler());
 		app.post("/compileandrun", new CompileAndRunHandler());
