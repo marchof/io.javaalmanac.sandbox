@@ -72,7 +72,7 @@ public class AttacksTest {
 	void too_much_output() throws Exception {
 		expectTimeout(TooMuchOutput.class);
 		assertThat(result.getOutput(), containsString("more and more and more"));
-		assertTrue(result.getOutput().length() <= 0x1000);
+		assertTrue(result.getOutput().length() <= 0x10_000);
 	}
 
 	private void expectAccessControlException(Class<?> target, String permission) throws Exception {

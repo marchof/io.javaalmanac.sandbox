@@ -47,7 +47,7 @@ public class SandboxLauncher {
 
 	private static final int MAXHEAP_MB = 16;
 
-	private static final int MAXOUTPUT_BYTES = 0x1000;
+	private static final int MAXOUTPUT_BYTES = 0x10_000;
 
 	private static final String[] JAVA_EXECUTABLE_NAME = new String[] { "java", "java.exe" };
 
