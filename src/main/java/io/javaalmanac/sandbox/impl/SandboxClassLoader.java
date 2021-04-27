@@ -35,6 +35,7 @@ public class SandboxClassLoader extends ClassLoader {
 			public PermissionCollection getPermissions(ProtectionDomain domain) {
 				Permissions permissions = new Permissions();
 				permissions.add(new FilePermission("<<ALL FILES>>", "read"));
+				permissions.add(new RuntimePermission("accessClassInPackage.sun.util.locale.provider"));
 				return permissions;
 			}
 		});

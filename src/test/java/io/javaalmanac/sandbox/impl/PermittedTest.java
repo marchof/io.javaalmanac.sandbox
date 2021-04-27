@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
 import io.javaalmanac.sandbox.permitted.ListDirectory;
+import io.javaalmanac.sandbox.permitted.UseLocaleProviders;
 
 /**
  * Verifies that certain actions are still allowed in the target vm.
@@ -22,10 +23,15 @@ public class PermittedTest {
 		expectExecutionWithoutException(ListDirectory.class);
 	}
 
+	@Test
+	void use_locale_providers() throws Exception {
+		expectExecutionWithoutException(UseLocaleProviders.class);
+	}
+
 	private void expectExecutionWithoutException(Class<?> target) throws Exception {
 		runInSandbox(target);
-		assertEquals(0, result.getStatus());
 		assertEquals("", result.getOutput());
+		assertEquals(0, result.getStatus());
 	}
 
 	private void runInSandbox(Class<?> target) throws Exception {
