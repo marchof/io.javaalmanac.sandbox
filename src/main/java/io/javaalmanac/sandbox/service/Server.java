@@ -12,11 +12,11 @@ public class Server {
 	public static void main(String[] args) {
 		Javalin app = Javalin.create(config -> {
 			config.enableCorsForOrigin(//
-					"http://localhost", //
-					"https://javaalmanac.io/", //
-					"https://www.javaalmanac.io/", //
-					"https://horstmann.com/", //
-					"https://www.horstmann.com/");
+					"http://localhost:1313", //
+					"https://www.javaalmanac.io", //
+					"https://javaalmanac.io", //
+					"https://www.horstmann.com", //
+					"https://horstmann.com");
 			config.requestLogger((ctx, ms) -> {
 				LOG.info("{} \"{} {} {}\" {} in {}ms", //
 						ctx.ip(), ctx.method(), ctx.path(), ctx.protocol(), ctx.res.getStatus(), ms);
