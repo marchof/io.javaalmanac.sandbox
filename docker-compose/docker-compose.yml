@@ -35,4 +35,9 @@ services:
     ports:
       - '8017:80'
     restart: always
+  java18:
+    image: ${AWS_REGISTRY}/javaalmanac/sandbox:latest-18
+    ports:
+      - '8018:80'
+    restart: always
     
