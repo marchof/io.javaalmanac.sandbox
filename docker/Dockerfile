@@ -6,4 +6,6 @@ RUN java --version
 
 COPY sandbox.jar /sandbox.jar
 
-CMD java -jar /sandbox.jar
+ENTRYPOINT [ "java", "-jar", "/sandbox.jar" ]
+
+CMD [ "io.javaalmanac.sandbox.service.VersionHandler" ]

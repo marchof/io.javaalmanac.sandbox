@@ -1,19 +1,21 @@
 package io.javaalmanac.sandbox.service;
 
-import io.javaalmanac.sandbox.api.CompileAndRunResponse;
+import java.io.IOException;
+
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+
 import io.javaalmanac.sandbox.api.CompileAndRunRequest;
+import io.javaalmanac.sandbox.api.CompileAndRunResponse;
 import io.javaalmanac.sandbox.api.SourceFile;
 import io.javaalmanac.sandbox.impl.InMemoryCompiler;
 import io.javaalmanac.sandbox.impl.SandboxLauncher;
-import io.javalin.http.Context;
-import io.javalin.http.Handler;
 
-public class CompileAndRunHandler implements Handler {
+public class CompileAndRunHandler implements RequestHandler<CompileAndRunRequest, CompileAndRunResponse> {
 
 	@Override
-	public void handle(Context ctx) throws Exception {
+	public CompileAndRunResponse handleRequest(CompileAndRunRequest request, Context context) {
 
-		CompileAndRunRequest request = ctx.bodyAsClass(CompileAndRunRequest.class);
 		CompileAndRunResponse response = new CompileAndRunResponse();
 
 		InMemoryCompiler compiler = new InMemoryCompiler();
@@ -33,12 +35,17 @@ public class CompileAndRunHandler implements Handler {
 			if (request.preview) {
 				sandbox.enablePreview();
 			}
-			SandboxLauncher.Result runResult = sandbox.run(request.mainclass, cmpresult.getClassfiles());
-			response.runstatus = runResult.getStatus();
-			response.output += runResult.getOutput();
+			SandboxLauncher.Result runResult;
+			try {
+				runResult = sandbox.run(request.mainclass, cmpresult.getClassfiles());
+				response.runstatus = runResult.getStatus();
+				response.output += runResult.getOutput();
+			} catch (IOException | InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
-		ctx.json(response);
+		return response;
 	}
 
 }

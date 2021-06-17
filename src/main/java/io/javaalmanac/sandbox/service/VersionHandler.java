@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import io.javalin.http.Context;
-import io.javalin.http.Handler;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-public class VersionHandler implements Handler {
+public class VersionHandler implements RequestHandler<Void, Map<String, String>> {
 
 	private static final Set<String> VERSION_KEYS = Set.of( //
 			"java.class.version", //
@@ -28,15 +28,14 @@ public class VersionHandler implements Handler {
 			"java.vm.version");
 
 	@Override
-	public void handle(Context ctx) throws Exception {
-
+	public Map<String, String> handleRequest(Void input, Context context) {
 		Map<String, String> response = new HashMap<>();
 
 		for (String key : VERSION_KEYS) {
 			response.put(key, System.getProperty(key));
 		}
 
-		ctx.json(response);
+		return response;
 	}
 
 }
