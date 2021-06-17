@@ -4,10 +4,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import io.javalin.http.Context;
-import io.javalin.http.Handler;
+public class Version implements ActionHandler<Void, Map<String, String>> {
 
-public class VersionHandler implements Handler {
+	@Override
+	public String getName() {
+		return "version";
+	}
+
+	@Override
+	public Set<String> getMethods() {
+		return Set.of("GET", "POST");
+	}
+
+	@Override
+	public Class<Void> getRequestType() {
+		return Void.class;
+	}
 
 	private static final Set<String> VERSION_KEYS = Set.of( //
 			"java.class.version", //
@@ -28,7 +40,7 @@ public class VersionHandler implements Handler {
 			"java.vm.version");
 
 	@Override
-	public void handle(Context ctx) throws Exception {
+	public Map<String, String> handle(Void request) {
 
 		Map<String, String> response = new HashMap<>();
 
@@ -36,7 +48,7 @@ public class VersionHandler implements Handler {
 			response.put(key, System.getProperty(key));
 		}
 
-		ctx.json(response);
+		return response;
 	}
 
 }

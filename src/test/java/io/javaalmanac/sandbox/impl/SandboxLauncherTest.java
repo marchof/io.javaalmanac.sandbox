@@ -3,13 +3,19 @@ package io.javaalmanac.sandbox.impl;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Collections;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.javaalmanac.sandbox.impl.SandboxLauncher.Result;
+import io.javaalmanac.sandbox.impl.targets.Exit;
+import io.javaalmanac.sandbox.impl.targets.NoOutput;
+import io.javaalmanac.sandbox.impl.targets.OutErr;
+import io.javaalmanac.sandbox.impl.targets.Timeout;
 
 public class SandboxLauncherTest {
 
@@ -19,11 +25,20 @@ public class SandboxLauncherTest {
 
 	@BeforeEach
 	void setup() {
-		sandbox = new SandboxLauncher();
+		sandbox = new SandboxLauncher(Path.of("./target/sandbox"));
 	}
 
-	private void run(Class<?> main) throws Exception {
-		result = sandbox.run(main.getName(), Collections.emptyMap());
+	private void run(Class<?> target) throws Exception {
+		String source = target.getName().replace('.', '/') + ".java";
+
+		InMemoryCompiler compiler = new InMemoryCompiler();
+		compiler.addSource(source, Files.readString(Path.of("src/test/java", source)));
+		InMemoryCompiler.Result compileResult = compiler.compile();
+		assertTrue(compileResult.isSuccess());
+
+		SandboxLauncher sandbox = new SandboxLauncher(Path.of("./target/sandbox"));
+
+		result = sandbox.run(target.getName(), compileResult.getClassfiles());
 	}
 
 	@Test
@@ -34,23 +49,10 @@ public class SandboxLauncherTest {
 		assertThat(result.getOutput(), containsString("Hello from Err!"));
 	}
 
-	public static class OutErr {
-		public static void main(String[] args) {
-			System.out.println("Hello from Out!");
-			System.err.println("Hello from Err!");
-		}
-	}
-
 	@Test
 	void should_capture_exit_value() throws Exception {
 		run(Exit.class);
 		assertEquals(42, result.getStatus());
-	}
-
-	public static class Exit {
-		public static void main(String[] args) {
-			System.exit(42);
-		}
 	}
 
 	@Test
@@ -59,23 +61,10 @@ public class SandboxLauncherTest {
 		assertEquals(Result.TIMEOUT_STATUS, result.getStatus());
 	}
 
-	public static class Timeout {
-		public static void main(String[] args) throws InterruptedException {
-			while (true) {
-				Thread.sleep(100);
-			}
-		}
-	}
-
 	@Test
 	void should_not_produce_additional_output() throws Exception {
 		run(NoOutput.class);
 		assertEquals("", result.getOutput());
-	}
-
-	public static class NoOutput {
-		public static void main(String[] args) throws InterruptedException {
-		}
 	}
 
 	@Test

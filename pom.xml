@@ -18,19 +18,19 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>io.javalin</groupId>
-			<artifactId>javalin</artifactId>
-			<version>3.13.6</version>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-runtime-interface-client</artifactId>
+			<version>1.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.30</version>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-events</artifactId>
+			<version>3.9.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.12.3</version>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-core</artifactId>
+			<version>1.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -76,7 +76,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>io.javaalmanac.sandbox.service.Server</mainClass>
+									<mainClass>com.amazonaws.services.lambda.runtime.api.client.AWSLambda</mainClass>
 								</transformer>
 							</transformers>
 							<finalName>sandbox</finalName>

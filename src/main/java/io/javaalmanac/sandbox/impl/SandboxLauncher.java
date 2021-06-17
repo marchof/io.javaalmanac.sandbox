@@ -3,18 +3,15 @@ package io.javaalmanac.sandbox.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.jar.JarOutputStream;
-import java.util.zip.ZipEntry;
 
 /**
  * Forks an new JVM from the currently used JDK installation.
@@ -45,19 +42,20 @@ public class SandboxLauncher {
 
 	private static final int TIMEOUT_SEC = 5;
 
-	private static final int MAXHEAP_MB = 16;
+	private static final int MAXHEAP_MB = 64;
 
 	private static final int MAXOUTPUT_BYTES = 0x10_000;
 
 	private static final String[] JAVA_EXECUTABLE_NAME = new String[] { "java", "java.exe" };
 
+	private Path workdir;
+
 	private final List<String> commandBase;
 
-	public SandboxLauncher() {
+	public SandboxLauncher(Path workdir) {
+		this.workdir = workdir;
 		commandBase = new ArrayList<>();
 		commandBase.add(getJavaExecutable());
-		commandBase.add(getSandboxClassLoaderArg());
-		commandBase.addAll(getInheritClassPathArgs());
 		commandBase.add(getDefaultEncodingArg());
 		commandBase.add(getMaxHeapArg());
 		commandBase.add(getClassDataSharingArg());
@@ -66,14 +64,6 @@ public class SandboxLauncher {
 
 	public void enablePreview() {
 		commandBase.add("--enable-preview");
-	}
-
-	private String getSandboxClassLoaderArg() {
-		return "-Djava.system.class.loader=" + SandboxClassLoader.class.getName();
-	}
-
-	private List<String> getInheritClassPathArgs() {
-		return Arrays.asList("-cp", System.getProperty("java.class.path"));
 	}
 
 	private String getDefaultEncodingArg() {
@@ -95,13 +85,17 @@ public class SandboxLauncher {
 	public Result run(String mainClass, Map<String, byte[]> classfiles) throws IOException, InterruptedException {
 		List<String> cmd = new ArrayList<>(commandBase);
 		cmd.add(mainClass);
+
+		prepareWorkingDirectory();
+		writeClassFiles(classfiles);
+
 		ProcessBuilder builder = new ProcessBuilder(cmd);
 		// Do not inherit environment variables
 		builder.environment().clear();
+		builder.directory(workdir.toFile());
 		builder.redirectErrorStream(true);
 
 		Process process = builder.start();
-		writeJar(classfiles, process.getOutputStream());
 
 		Result result = new Result();
 		boolean success = process.waitFor(TIMEOUT_SEC, TimeUnit.SECONDS);
@@ -117,12 +111,11 @@ public class SandboxLauncher {
 		return result;
 	}
 
-	private static void writeJar(Map<String, byte[]> classfiles, OutputStream out) throws IOException {
-		try (JarOutputStream jar = new JarOutputStream(out)) {
-			for (Map.Entry<String, byte[]> e : classfiles.entrySet()) {
-				jar.putNextEntry(new ZipEntry(e.getKey()));
-				jar.write(e.getValue());
-			}
+	private void writeClassFiles(Map<String, byte[]> classfiles) throws IOException {
+		for (Map.Entry<String, byte[]> e : classfiles.entrySet()) {
+			Path file = workdir.resolve(e.getKey());
+			Files.createDirectories(file.getParent());
+			Files.write(file, e.getValue());
 		}
 	}
 
@@ -145,6 +138,21 @@ public class SandboxLauncher {
 			buffer.write(in.readNBytes(available));
 		}
 		return buffer.toByteArray();
+	}
+
+	private void prepareWorkingDirectory() throws IOException {
+		if (Files.exists(workdir)) {
+			Files.walk(workdir).sorted(Comparator.reverseOrder()).forEach(this::delete);
+		}
+		Files.createDirectories(workdir);
+	}
+
+	private void delete(Path p) {
+		try {
+			Files.delete(p);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

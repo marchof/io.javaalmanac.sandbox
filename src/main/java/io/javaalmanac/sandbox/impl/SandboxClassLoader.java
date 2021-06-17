@@ -1,11 +1,6 @@
 package io.javaalmanac.sandbox.impl;
 
-import java.io.FilePermission;
 import java.io.IOException;
-import java.security.PermissionCollection;
-import java.security.Permissions;
-import java.security.Policy;
-import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
@@ -28,18 +23,6 @@ public class SandboxClassLoader extends ClassLoader {
 				classfiles.put(entry.getName(), in.readAllBytes());
 			}
 		}
-
-		// Now remove all permissions:
-		Policy.setPolicy(new Policy() {
-			@Override
-			public PermissionCollection getPermissions(ProtectionDomain domain) {
-				Permissions permissions = new Permissions();
-				permissions.add(new FilePermission("<<ALL FILES>>", "read"));
-				permissions.add(new RuntimePermission("accessClassInPackage.sun.util.locale.provider"));
-				return permissions;
-			}
-		});
-		System.setSecurityManager(new SecurityManager());
 	}
 
 	@Override
