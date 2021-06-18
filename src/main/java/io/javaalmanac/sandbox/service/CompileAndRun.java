@@ -1,9 +1,7 @@
 package io.javaalmanac.sandbox.service;
 
 import java.io.IOException;
-
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
+import java.util.Set;
 
 import io.javaalmanac.sandbox.api.CompileAndRunRequest;
 import io.javaalmanac.sandbox.api.CompileAndRunResponse;
@@ -11,10 +9,24 @@ import io.javaalmanac.sandbox.api.SourceFile;
 import io.javaalmanac.sandbox.impl.InMemoryCompiler;
 import io.javaalmanac.sandbox.impl.SandboxLauncher;
 
-public class CompileAndRunHandler implements RequestHandler<CompileAndRunRequest, CompileAndRunResponse> {
+public class CompileAndRun implements ActionHandler<CompileAndRunRequest, CompileAndRunResponse> {
 
 	@Override
-	public CompileAndRunResponse handleRequest(CompileAndRunRequest request, Context context) {
+	public String getName() {
+		return "compileAndRun";
+	}
+
+	@Override
+	public Set<String> getMethods() {
+		return Set.of("POST");
+	}
+
+	@Override
+	public Class<CompileAndRunRequest> getRequestType() {
+		return CompileAndRunRequest.class;
+	}
+
+	public CompileAndRunResponse handle(CompileAndRunRequest request) {
 
 		CompileAndRunResponse response = new CompileAndRunResponse();
 
