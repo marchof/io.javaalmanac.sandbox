@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.core.JsonProcessingException;
+import com.amazonaws.lambda.thirdparty.com.fasterxml.jackson.databind.ObjectMapper;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -39,7 +41,13 @@ public class VersionHandler implements RequestHandler<APIGatewayProxyRequestEven
 
 		APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
 		responseEvent.setStatusCode(200);
-		responseEvent.setBody(response.toString());
+
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			responseEvent.setBody(mapper.writeValueAsString(response));
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 
 		return responseEvent;
 	}
