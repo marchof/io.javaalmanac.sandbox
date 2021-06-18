@@ -13,7 +13,7 @@ public class CompileAndRun implements ActionHandler<CompileAndRunRequest, Compil
 
 	@Override
 	public String getName() {
-		return "compileAndRun";
+		return "compileandrun";
 	}
 
 	@Override
