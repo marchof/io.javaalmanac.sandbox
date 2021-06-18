@@ -38,6 +38,7 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 
 		String method = request.getHttpMethod();
 		String action = request.getPathParameters().get("action");
+		String origin = request.getHeaders().get("Origin");
 
 		ActionHandler<Object, Object> handler = getHandler(action, method);
 
@@ -55,10 +56,13 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 				requestObject = mapper.readValue(request.getBody(), handler.getRequestType());
 			}
 
-			Object reponseObject = handler.handle(requestObject);
+			Object responseObject = handler.handle(requestObject);
 
 			response.setStatusCode(200);
-			response.setBody(mapper.writeValueAsString(reponseObject));
+			if (origin != null) {
+				response.setHeaders(Map.of("access-control-allow-origin", origin));
+			}
+			response.setBody(mapper.writeValueAsString(responseObject));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
