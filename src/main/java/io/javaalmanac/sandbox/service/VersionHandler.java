@@ -6,8 +6,10 @@ import java.util.Set;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 
-public class VersionHandler implements RequestHandler<Void, Map<String, String>> {
+public class VersionHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
 	private static final Set<String> VERSION_KEYS = Set.of( //
 			"java.class.version", //
@@ -28,14 +30,18 @@ public class VersionHandler implements RequestHandler<Void, Map<String, String>>
 			"java.vm.version");
 
 	@Override
-	public Map<String, String> handleRequest(Void input, Context context) {
+	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
 		Map<String, String> response = new HashMap<>();
 
 		for (String key : VERSION_KEYS) {
 			response.put(key, System.getProperty(key));
 		}
 
-		return response;
+		APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
+		responseEvent.setStatusCode(200);
+		responseEvent.setBody(response.toString());
+
+		return responseEvent;
 	}
 
 }
