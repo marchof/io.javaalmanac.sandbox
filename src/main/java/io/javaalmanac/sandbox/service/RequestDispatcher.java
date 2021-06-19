@@ -59,9 +59,13 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 			Object responseObject = handler.handle(requestObject);
 
 			response.setStatusCode(200);
+			Map<String, String> header = new HashMap<>();
+			header.put("x-test-header", "test value");
 			if (origin != null) {
-				response.setHeaders(Map.of("access-control-allow-origin", origin));
+				header.put("Access-Control-Allow-Origin", origin);
 			}
+			response.setHeaders(header);
+
 			response.setBody(mapper.writeValueAsString(responseObject));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
