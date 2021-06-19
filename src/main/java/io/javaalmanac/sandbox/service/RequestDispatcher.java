@@ -38,7 +38,7 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 
 		String method = request.getHttpMethod();
 		String action = request.getPathParameters().get("action");
-		String origin = request.getHeaders().get("Origin");
+		String origin = request.getHeaders().get("origin");
 
 		ActionHandler<Object, Object> handler = getHandler(action, method);
 
@@ -60,7 +60,6 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 
 			response.setStatusCode(200);
 			Map<String, String> header = new HashMap<>();
-			header.put("x-test-header", "test value");
 			if (origin != null) {
 				header.put("Access-Control-Allow-Origin", origin);
 			}
