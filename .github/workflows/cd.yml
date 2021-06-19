@@ -49,6 +49,10 @@ jobs:
           - version: 18
             image: openjdk:18
 
+    env:
+      ECR_REPOSITORY: javaalmanac/sandbox
+      LATEST_TAG: lambda-latest-${{ matrix.jdk.version }}
+    
     steps:
     - uses: actions/checkout@v1
     - name: Download jar
@@ -61,20 +65,28 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-central-1
+        aws-region: ${{ secrets.AWS_REGION }}
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
     - name: Build, tag, and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: javaalmanac/sandbox
-        LATEST_TAG: lambda-latest-${{ matrix.jdk.version }}
         JDK_IMAGE: ${{ matrix.jdk.image }}
       run: |
         docker build --build-arg JDK_IMAGE=$JDK_IMAGE -t sandbox docker
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
+    - name: Update Lambda
+      uses: appleboy/lambda-action@master
+      with:
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: ${{ secrets.AWS_REGION }}
+        function_name: jdk-sandbox-${{ matrix.jdk.version }}
+        image_uri: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.LATEST_TAG }}
+        memory_size: 2048
+        timeout: 30
     - name: Logout of Amazon ECR
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
