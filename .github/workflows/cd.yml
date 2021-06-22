@@ -33,17 +33,17 @@ jobs:
       matrix:
         jdk:
           - version: 11
-            image: adoptopenjdk/openjdk11
+            image: adoptopenjdk/openjdk11:alpine-slim
           - version: 12
-            image: adoptopenjdk/openjdk12
+            image: adoptopenjdk/openjdk12:alpine-slim
           - version: 13
-            image: adoptopenjdk/openjdk13
+            image: adoptopenjdk/openjdk13:alpine-slim
           - version: 14
-            image: adoptopenjdk/openjdk14
+            image: adoptopenjdk/openjdk14:alpine-slim
           - version: 15
-            image: adoptopenjdk/openjdk15
+            image: adoptopenjdk/openjdk15:alpine-slim
           - version: 16
-            image: adoptopenjdk/openjdk16
+            image: adoptopenjdk/openjdk16:alpine-slim
           - version: 17
             image: openjdk:17
           - version: 18
