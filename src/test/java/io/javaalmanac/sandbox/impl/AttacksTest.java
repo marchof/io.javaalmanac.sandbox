@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.javaalmanac.sandbox.attacks.StartManyThreads;
@@ -18,7 +17,6 @@ import io.javaalmanac.sandbox.attacks.TooMuchOutput;
 /**
  * Verifies that different attacks result in termination of target vm.
  */
-@Disabled
 public class AttacksTest {
 
 	private SandboxLauncher.Result result;
@@ -59,7 +57,7 @@ public class AttacksTest {
 		InMemoryCompiler.Result compileResult = compiler.compile();
 		assertTrue(compileResult.isSuccess());
 
-		SandboxLauncher sandbox = new SandboxLauncher();
+		SandboxLauncher sandbox = new SandboxLauncher(Path.of("./target/sandbox"));
 
 		result = sandbox.run(target.getName(), compileResult.getClassfiles());
 	}

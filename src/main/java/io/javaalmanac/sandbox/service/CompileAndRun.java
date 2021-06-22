@@ -1,6 +1,7 @@
 package io.javaalmanac.sandbox.service;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 
 import io.javaalmanac.sandbox.api.CompileAndRunRequest;
@@ -10,6 +11,12 @@ import io.javaalmanac.sandbox.impl.InMemoryCompiler;
 import io.javaalmanac.sandbox.impl.SandboxLauncher;
 
 public class CompileAndRun implements ActionHandler<CompileAndRunRequest, CompileAndRunResponse> {
+
+	private Path workdir;
+
+	CompileAndRun() {
+		workdir = Path.of(System.getenv("SANDBOX_WORK_DIR"));
+	}
 
 	@Override
 	public String getName() {
@@ -43,7 +50,7 @@ public class CompileAndRun implements ActionHandler<CompileAndRunRequest, Compil
 		response.output = cmpresult.getMessagesAsText();
 
 		if (cmpresult.isSuccess()) {
-			SandboxLauncher sandbox = new SandboxLauncher();
+			SandboxLauncher sandbox = new SandboxLauncher(workdir);
 			if (request.preview) {
 				sandbox.enablePreview();
 			}
