@@ -2,7 +2,7 @@ ARG JDK_IMAGE
 
 FROM ${JDK_IMAGE}
 
-RUN java --version
+RUN java -version
 
 COPY sandbox.jar /home/sandbox.jar
 

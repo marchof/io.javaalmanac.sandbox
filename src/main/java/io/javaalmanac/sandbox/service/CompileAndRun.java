@@ -2,8 +2,10 @@ package io.javaalmanac.sandbox.service;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
+import io.javaalmanac.sandbox.Java11Compat;
 import io.javaalmanac.sandbox.api.CompileAndRunRequest;
 import io.javaalmanac.sandbox.api.CompileAndRunResponse;
 import io.javaalmanac.sandbox.api.SourceFile;
@@ -15,7 +17,7 @@ public class CompileAndRun implements ActionHandler<CompileAndRunRequest, Compil
 	private Path workdir;
 
 	CompileAndRun() {
-		workdir = Path.of(System.getenv("SANDBOX_WORK_DIR"));
+		workdir = Paths.get(System.getenv("SANDBOX_WORK_DIR"));
 	}
 
 	@Override
@@ -25,7 +27,7 @@ public class CompileAndRun implements ActionHandler<CompileAndRunRequest, Compil
 
 	@Override
 	public Set<String> getMethods() {
-		return Set.of("POST");
+		return Java11Compat.Set.of("POST");
 	}
 
 	@Override

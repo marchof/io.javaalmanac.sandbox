@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import io.javaalmanac.sandbox.Java11Compat;
+
 /**
  * This class loader is used for the sandbox VM. It loads class definitions as a
  * JAR file from stdin and installs a restrictive security manager.
@@ -20,7 +22,7 @@ public class SandboxClassLoader extends ClassLoader {
 		try (JarInputStream in = new JarInputStream(System.in)) {
 			JarEntry entry;
 			while ((entry = in.getNextJarEntry()) != null) {
-				classfiles.put(entry.getName(), in.readAllBytes());
+				classfiles.put(entry.getName(), Java11Compat.InputStream.readAllBytes(in));
 			}
 		}
 	}

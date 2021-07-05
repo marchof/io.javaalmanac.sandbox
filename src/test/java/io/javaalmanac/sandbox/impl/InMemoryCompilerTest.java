@@ -7,11 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import io.javaalmanac.sandbox.Java11Compat;
 import io.javaalmanac.sandbox.impl.InMemoryCompiler.Result;
 
 public class InMemoryCompilerTest {
@@ -31,7 +32,7 @@ public class InMemoryCompilerTest {
 		result = compiler.compile();
 		assertThat(result.getMessages(), empty());
 		assertTrue(result.isSuccess());
-		assertEquals(Set.of("foo/Foo.class"), result.getClassfiles().keySet());
+		assertEquals(Java11Compat.Set.of("foo/Foo.class"), result.getClassfiles().keySet());
 	}
 
 	@Test
@@ -41,7 +42,7 @@ public class InMemoryCompilerTest {
 		result = compiler.compile();
 		assertThat(result.getMessages(), empty());
 		assertTrue(result.isSuccess());
-		assertEquals(result.getClassfiles().keySet(), Set.of("foo/Foo.class", "foo/Bar.class"));
+		assertEquals(result.getClassfiles().keySet(), Java11Compat.Set.of("foo/Foo.class", "foo/Bar.class"));
 	}
 
 	@Test
@@ -50,7 +51,7 @@ public class InMemoryCompilerTest {
 		result = compiler.compile();
 		assertThat(result.getMessages(), empty());
 		assertTrue(result.isSuccess());
-		assertEquals(Set.of("foo/Foo.class", "foo/Foo$Inner.class"), result.getClassfiles().keySet());
+		assertEquals(Java11Compat.Set.of("foo/Foo.class", "foo/Foo$Inner.class"), result.getClassfiles().keySet());
 	}
 
 	@Test
@@ -59,17 +60,18 @@ public class InMemoryCompilerTest {
 		result = compiler.compile();
 		assertThat(result.getMessages(), empty());
 		assertTrue(result.isSuccess());
-		assertEquals(Set.of("MySet.class"), result.getClassfiles().keySet());
+		assertEquals(Java11Compat.Set.of("MySet.class"), result.getClassfiles().keySet());
 	}
 
 	@Test
+	@Disabled("Not supported for Java 8")
 	void should_compile_with_preview() throws IOException {
 		compiler.enablePreview();
 		compiler.addSource("Foo.java", "class Foo { }");
 		result = compiler.compile();
 		assertThat(result.getMessages(), empty());
 		assertTrue(result.isSuccess());
-		assertEquals(Set.of("Foo.class"), result.getClassfiles().keySet());
+		assertEquals(Java11Compat.Set.of("Foo.class"), result.getClassfiles().keySet());
 	}
 
 	@Test

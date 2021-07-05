@@ -117,7 +117,12 @@ public class InMemoryCompiler {
 
 		MemoryFile(Kind kind, String name, String content) {
 			this(kind, name);
-			this.content.writeBytes(content.getBytes(ENCODING));
+			try {
+				this.content.write(content.getBytes(ENCODING));
+			} catch (IOException e) {
+				// Must not happen for ByteArrayOutputStream
+				throw new RuntimeException(e);
+			}
 		}
 
 		@Override

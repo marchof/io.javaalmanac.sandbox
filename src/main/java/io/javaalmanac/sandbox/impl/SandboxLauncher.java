@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.javaalmanac.sandbox.Java11Compat;
+
 /**
  * Forks an new JVM from the currently used JDK installation.
  */
@@ -100,7 +102,8 @@ public class SandboxLauncher {
 		Result result = new Result();
 		boolean success = process.waitFor(TIMEOUT_SEC, TimeUnit.SECONDS);
 		if (success) {
-			result.output = new String(process.getInputStream().readNBytes(MAXOUTPUT_BYTES), StandardCharsets.UTF_8);
+			result.output = new String(Java11Compat.InputStream.readNBytes(process.getInputStream(), MAXOUTPUT_BYTES),
+					StandardCharsets.UTF_8);
 			result.status = process.exitValue();
 		} else {
 			result.output = new String(readAvailableBytes(process.getInputStream()), StandardCharsets.UTF_8);
@@ -135,7 +138,7 @@ public class SandboxLauncher {
 		int available = in.available();
 		while ((available = in.available()) > 0 && buffer.size() < MAXOUTPUT_BYTES) {
 			available = Math.min(available, MAXOUTPUT_BYTES - buffer.size());
-			buffer.write(in.readNBytes(available));
+			buffer.write(Java11Compat.InputStream.readNBytes(in, available));
 		}
 		return buffer.toByteArray();
 	}

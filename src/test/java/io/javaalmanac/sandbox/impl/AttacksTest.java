@@ -5,11 +5,11 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
+import io.javaalmanac.sandbox.Java11Compat;
 import io.javaalmanac.sandbox.attacks.StartManyThreads;
 import io.javaalmanac.sandbox.attacks.TooMuchMemory;
 import io.javaalmanac.sandbox.attacks.TooMuchOutput;
@@ -53,11 +53,11 @@ public class AttacksTest {
 		String source = target.getName().replace('.', '/') + ".java";
 
 		InMemoryCompiler compiler = new InMemoryCompiler();
-		compiler.addSource(source, Files.readString(Path.of("src/test/java", source)));
+		compiler.addSource(source, Java11Compat.Files.readString(Paths.get("src/test/java", source)));
 		InMemoryCompiler.Result compileResult = compiler.compile();
 		assertTrue(compileResult.isSuccess());
 
-		SandboxLauncher sandbox = new SandboxLauncher(Path.of("./target/sandbox"));
+		SandboxLauncher sandbox = new SandboxLauncher(Paths.get("./target/sandbox"));
 
 		result = sandbox.run(target.getName(), compileResult.getClassfiles());
 	}

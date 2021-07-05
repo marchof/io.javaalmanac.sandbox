@@ -11,9 +11,11 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 
+import io.javaalmanac.sandbox.Java11Compat;
+
 public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-	private static final Set<String> ALLOWED_ORIGINS = Set.of( //
+	private static final Set<String> ALLOWED_ORIGINS = Java11Compat.Set.of( //
 			"http://localhost:1313", //
 			"https://javaalmanac.io", //
 			"https://www.javaalmanac.io", //
@@ -79,9 +81,9 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 	}
 
 	private APIGatewayProxyResponseEvent errorResponse(int code, String message) throws IOException {
-		var response = new APIGatewayProxyResponseEvent();
-		var body = Map.of( //
-				"error", Map.of( //
+		APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+		Map<String, Map<String, Object>> body = Java11Compat.Map.of( //
+				"error", Java11Compat.Map.of( //
 						"status", code, //
 						"message", message));
 		response.setStatusCode(code);
@@ -91,9 +93,9 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 
 	private void addCORSHeaders(ActionHandler<Object, Object> handler, APIGatewayProxyRequestEvent request,
 			APIGatewayProxyResponseEvent response) {
-		var origin = getHeader(request, "origin");
+		String origin = getHeader(request, "origin");
 		if (ALLOWED_ORIGINS.contains(origin)) {
-			response.setHeaders(Map.of( //
+			response.setHeaders(Java11Compat.Map.of( //
 					"Access-Control-Allow-Origin", origin, //
 					"Access-Control-Allow-Headers", "content-type", //
 					"Access-Control-Allow-Methods", String.join(", ", handler.getMethods())));
@@ -101,11 +103,11 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 	}
 
 	private String getHeader(APIGatewayProxyRequestEvent request, String key) {
-		var headers = request.getHeaders();
+		Map<String, String> headers = request.getHeaders();
 		if (headers == null) {
 			return null;
 		}
-		for (var entry : headers.entrySet()) {
+		for (Map.Entry<String, String> entry : headers.entrySet()) {
 			if (entry.getKey().toLowerCase().equals(key)) {
 				return entry.getValue();
 			}

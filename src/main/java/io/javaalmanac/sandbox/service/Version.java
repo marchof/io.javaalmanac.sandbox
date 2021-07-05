@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.javaalmanac.sandbox.Java11Compat;
+
 public class Version implements ActionHandler<Void, Map<String, String>> {
 
 	@Override
@@ -13,7 +15,7 @@ public class Version implements ActionHandler<Void, Map<String, String>> {
 
 	@Override
 	public Set<String> getMethods() {
-		return Set.of("GET", "POST");
+		return Java11Compat.Set.of("GET", "POST");
 	}
 
 	@Override
@@ -21,7 +23,7 @@ public class Version implements ActionHandler<Void, Map<String, String>> {
 		return Void.class;
 	}
 
-	private static final Set<String> VERSION_KEYS = Set.of( //
+	private static final Set<String> VERSION_KEYS = Java11Compat.Set.of( //
 			"java.class.version", //
 			"java.runtime.name", //
 			"java.runtime.version", //
