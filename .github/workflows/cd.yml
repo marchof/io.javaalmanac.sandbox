@@ -50,9 +50,9 @@ jobs:
           - version: 16
             image: adoptopenjdk/openjdk16:alpine-slim
           - version: 17
-            image: openjdk:17
+            image: openjdk:17-slim
           - version: 18
-            image: openjdk:18
+            image: openjdk:18-slim
 
     env:
       ECR_REPOSITORY: javaalmanac/sandbox
