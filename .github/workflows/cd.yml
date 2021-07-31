@@ -19,7 +19,7 @@ jobs:
       with:
         java-version: 8
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package  -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
     - name: Upload jar
       uses: actions/upload-artifact@v1
       with:
