@@ -65,7 +65,7 @@ jobs:
             image: adoptopenjdk/openjdk16:alpine-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 17
-            image: openjdk:17-slim
+            image: eclipse-temurin:17-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 18
             image: openjdk:18-slim
