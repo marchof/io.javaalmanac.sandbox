@@ -47,7 +47,7 @@ jobs:
             image: adoptopenjdk/openjdk10:alpine-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 11
-            image: adoptopenjdk/openjdk11:alpine-slim
+            image: eclipse-temurin:11-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 12
             image: adoptopenjdk/openjdk12:alpine-slim
@@ -62,7 +62,7 @@ jobs:
             image: adoptopenjdk/openjdk15:alpine-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 16
-            image: adoptopenjdk/openjdk16:alpine-slim
+            image: eclipse-temurin:16-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 17
             image: eclipse-temurin:17-alpine
