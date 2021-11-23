@@ -108,8 +108,6 @@ jobs:
         aws_region: ${{ secrets.AWS_REGION }}
         function_name: jdk-sandbox-${{ matrix.jdk.version }}
         image_uri: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.LATEST_TAG }}
-        memory_size: 2048
-        timeout: 30
     - name: Logout of Amazon ECR
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
