@@ -73,6 +73,9 @@ jobs:
           - version: 19
             image: openjdk:19-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
+          - version: 20
+            image: openjdk:20-slim
+            vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
 
     name: Java ${{ matrix.jdk.version }} Image (${{ matrix.jdk.image }})
 
