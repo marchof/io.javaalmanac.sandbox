@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import io.javaalmanac.sandbox.Java11Compat;
 import io.javaalmanac.sandbox.impl.SandboxLauncher.Result;
 import io.javaalmanac.sandbox.impl.targets.Exit;
+import io.javaalmanac.sandbox.impl.targets.NoMain;
 import io.javaalmanac.sandbox.impl.targets.NoOutput;
 import io.javaalmanac.sandbox.impl.targets.OutErr;
 import io.javaalmanac.sandbox.impl.targets.Timeout;
@@ -42,7 +43,7 @@ public class SandboxLauncherTest {
 	}
 
 	@Test
-	void should_combinde_stdout_and_stderr() throws Exception {
+	void should_combine_stdout_and_stderr() throws Exception {
 		run(OutErr.class);
 		assertEquals(0, result.getStatus());
 		assertThat(result.getOutput(), containsString("Hello from Out!"));
@@ -53,6 +54,14 @@ public class SandboxLauncherTest {
 	void should_capture_exit_value() throws Exception {
 		run(Exit.class);
 		assertEquals(42, result.getStatus());
+	}
+
+	@Test
+	void should_capture_vm_failure_message() throws Exception {
+		run(NoMain.class);
+		assertEquals(1, result.getStatus());
+		System.out.println(result.getOutput());
+		assertThat(result.getOutput(), containsString("Main method not found"));
 	}
 
 	@Test
