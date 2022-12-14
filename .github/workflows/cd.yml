@@ -76,6 +76,9 @@ jobs:
           - version: 20
             image: openjdk:20-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
+          - version: 21
+            image: openjdk:21-slim
+            vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
 
     name: Java ${{ matrix.jdk.version }} Image (${{ matrix.jdk.image }})
 
@@ -84,9 +87,9 @@ jobs:
       LATEST_TAG: lambda-latest-${{ matrix.jdk.version }}
     
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Download JAR
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v3
       with:
         name: sandbox.jar
         path: docker
