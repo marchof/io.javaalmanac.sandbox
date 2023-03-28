@@ -75,7 +75,7 @@ jobs:
             image: eclipse-temurin:19-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 20
-            image: openjdk:20-slim
+            image: eclipse-temurin:20-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 21
             image: openjdk:21-slim
