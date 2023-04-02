@@ -111,7 +111,7 @@ jobs:
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
     - name: Update Lambda
-      uses: appleboy/lambda-action@1e05c1377056f21ebb2ce69b910bc16b943c2a66
+      uses: appleboy/lambda-action@v0.1.8
       with:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
