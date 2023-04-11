@@ -111,14 +111,13 @@ jobs:
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
     - name: Update Lambda
-      uses: appleboy/lambda-action@390dab2546e6c97ca3b94fc5f3863d0e15bec0ee
+      uses: appleboy/lambda-action@v0.1.9
       with:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws_region: ${{ secrets.AWS_REGION }}
         function_name: jdk-sandbox-${{ matrix.jdk.version }}
         image_uri: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.LATEST_TAG }}
-        max_attempts: 1000
     - name: Logout of Amazon ECR
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
