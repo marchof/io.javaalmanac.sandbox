@@ -80,6 +80,9 @@ jobs:
           - version: 21
             image: openjdk:21-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
+          - version: 22
+            image: openjdk:22-slim
+            vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
 
     name: Java ${{ matrix.jdk.version }} Image (${{ matrix.jdk.image }})
 
