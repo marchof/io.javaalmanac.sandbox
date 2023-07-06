@@ -98,6 +98,10 @@ jobs:
             docker: docker/jdk
             image: openjdk:22-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
+          - version: valhalla
+            docker: docker/valhalla
+            image: n/a
+            vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
 
     name: Java ${{ matrix.jdk.version }} Image (${{ matrix.jdk.image }})
 
