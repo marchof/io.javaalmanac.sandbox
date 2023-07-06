@@ -39,48 +39,63 @@ jobs:
       matrix:
         jdk:
           - version: 8
+            docker: docker/jdk
             image: adoptopenjdk/openjdk8:alpine-slim
             vmargs: ''
           - version: 9
+            docker: docker/jdk
             image: adoptopenjdk/openjdk9:alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 10
+            docker: docker/jdk
             image: adoptopenjdk/openjdk10:alpine-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 11
+            docker: docker/jdk
             image: eclipse-temurin:11-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 12
+            docker: docker/jdk
             image: adoptopenjdk/openjdk12:alpine-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 13
+            docker: docker/jdk
             image: adoptopenjdk/openjdk13:alpine-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 14
+            docker: docker/jdk
             image: adoptopenjdk/openjdk14:alpine-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 15
+            docker: docker/jdk
             image: adoptopenjdk/openjdk15:alpine-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 16
+            docker: docker/jdk
             image: eclipse-temurin:16-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 17
+            docker: docker/jdk
             image: eclipse-temurin:17-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 18
+            docker: docker/jdk
             image: eclipse-temurin:18-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 19
+            docker: docker/jdk
             image: eclipse-temurin:19-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 20
+            docker: docker/jdk
             image: eclipse-temurin:20-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 21
+            docker: docker/jdk
             image: openjdk:21-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 22
+            docker: docker/jdk
             image: openjdk:22-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
 
@@ -96,7 +111,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: sandbox.jar
-        path: docker
+        path: ${{ matrix.jdk.docker }}
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -110,7 +125,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        docker build --build-arg JDK_IMAGE=${{ matrix.jdk.image }} --build-arg "VMARGS=${{ matrix.jdk.vmargs }}" -t sandbox docker
+        docker build --build-arg JDK_IMAGE=${{ matrix.jdk.image }} --build-arg "VMARGS=${{ matrix.jdk.vmargs }}" -t sandbox ${{ matrix.jdk.docker }}
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
     - name: Update Lambda
