@@ -16,15 +16,9 @@ ENV PATH $JAVA_HOME/bin:$PATH
 # Default to UTF-8 file.encoding
 ENV LANG C.UTF-8
 
-# https://jdk.java.net/
-# >
-# > Java Development Kit builds, from Oracle
-# >
-ENV JAVA_VERSION 20-valhalla+20-75
-
 RUN set -eux; \
 	\
-	downloadUrl='https://github.com/marchof/openjdk-valhalla-builds/releases/download/latest-build/jdk-valhalla.tar.gz'; \
+	downloadUrl='https://github.com/marchof/openjdk-valhalla-builds/releases/download/latest-build/jdk-valhalla-lw5.tar.gz'; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
