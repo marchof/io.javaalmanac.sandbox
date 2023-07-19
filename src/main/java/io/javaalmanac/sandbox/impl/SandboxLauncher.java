@@ -1,9 +1,10 @@
 package io.javaalmanac.sandbox.impl;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -58,7 +59,9 @@ public class SandboxLauncher {
 		this.workdir = workdir;
 		commandBase = new ArrayList<>();
 		commandBase.add(getJavaExecutable());
-		commandBase.add(getDefaultEncodingArg());
+		commandBase.add(getFileEncodingArg());
+		commandBase.add(getStdoutEncodingArg());
+		commandBase.add(getStderrEncodingArg());
 		commandBase.add(getMaxHeapArg());
 		commandBase.add(getClassDataSharingArg());
 		commandBase.add(getDisableOptimizationArg());
@@ -68,8 +71,16 @@ public class SandboxLauncher {
 		commandBase.add("--enable-preview");
 	}
 
-	private String getDefaultEncodingArg() {
-		return "-Dfile.encoding=" + StandardCharsets.UTF_8;
+	private String getFileEncodingArg() {
+		return "-Dfile.encoding=" + UTF_8;
+	}
+
+	private String getStdoutEncodingArg() {
+		return "-Dstdout.encoding=" + UTF_8;
+	}
+
+	private String getStderrEncodingArg() {
+		return "-Dstderr.encoding=" + UTF_8;
 	}
 
 	private String getMaxHeapArg() {
@@ -103,10 +114,10 @@ public class SandboxLauncher {
 		boolean success = process.waitFor(TIMEOUT_SEC, TimeUnit.SECONDS);
 		if (success) {
 			result.output = new String(Java11Compat.InputStream.readNBytes(process.getInputStream(), MAXOUTPUT_BYTES),
-					StandardCharsets.UTF_8);
+					UTF_8);
 			result.status = process.exitValue();
 		} else {
-			result.output = new String(readAvailableBytes(process.getInputStream()), StandardCharsets.UTF_8);
+			result.output = new String(readAvailableBytes(process.getInputStream()), UTF_8);
 			result.status = Result.TIMEOUT_STATUS;
 			process.destroyForcibly();
 		}
