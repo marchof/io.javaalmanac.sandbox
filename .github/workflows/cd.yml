@@ -99,6 +99,10 @@ jobs:
             docker: docker/jdk
             image: openjdk:22-slim
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
+          - version: 23
+            docker: docker/jdk
+            image: openjdk:23-slim
+            vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: valhalla
             docker: docker/valhalla
             image: n/a
