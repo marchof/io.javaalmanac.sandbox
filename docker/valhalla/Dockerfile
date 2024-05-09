@@ -18,7 +18,7 @@ ENV LANG C.UTF-8
 
 RUN set -eux; \
 	\
-	downloadUrl='https://github.com/marchof/openjdk-valhalla-builds/releases/download/latest-build/jdk-valhalla-lw5.tar.gz'; \
+	downloadUrl='https://github.com/marchof/openjdk-valhalla-builds/releases/download/latest-build/jdk-valhalla-lworld.tar.gz'; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
