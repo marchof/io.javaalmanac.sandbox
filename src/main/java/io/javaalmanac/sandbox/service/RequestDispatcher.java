@@ -16,6 +16,7 @@ import io.javaalmanac.sandbox.Java11Compat;
 public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
 	private static final Set<String> ALLOWED_ORIGINS = Java11Compat.Set.of( //
+			"http://localhost", //
 			"http://localhost:1313", //
 			"https://javaalmanac.io", //
 			"https://www.javaalmanac.io", //
