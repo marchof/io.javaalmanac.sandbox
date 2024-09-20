@@ -101,7 +101,7 @@ jobs:
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 23
             docker: docker/jdk
-            image: openjdk:23-slim
+            image: eclipse-temurin:23-alpine
             vmargs: '--add-opens java.base/java.util=ALL-UNNAMED'
           - version: 24
             docker: docker/jdk
