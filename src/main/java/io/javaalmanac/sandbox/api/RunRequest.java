@@ -2,7 +2,7 @@ package io.javaalmanac.sandbox.api;
 
 import java.util.List;
 
-public class CompileAndRunRequest {
+public class RunRequest {
 
 	public List<SourceFile> sourcefiles;
 

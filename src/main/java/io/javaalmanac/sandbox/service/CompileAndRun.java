@@ -6,13 +6,13 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 import io.javaalmanac.sandbox.Java11Compat;
-import io.javaalmanac.sandbox.api.CompileAndRunRequest;
-import io.javaalmanac.sandbox.api.CompileAndRunResponse;
+import io.javaalmanac.sandbox.api.RunRequest;
+import io.javaalmanac.sandbox.api.RunResponse;
 import io.javaalmanac.sandbox.api.SourceFile;
 import io.javaalmanac.sandbox.impl.InMemoryCompiler;
 import io.javaalmanac.sandbox.impl.SandboxLauncher;
 
-public class CompileAndRun implements ActionHandler<CompileAndRunRequest, CompileAndRunResponse> {
+public class CompileAndRun implements ActionHandler<RunRequest, RunResponse> {
 
 	private Path workdir;
 
@@ -31,13 +31,13 @@ public class CompileAndRun implements ActionHandler<CompileAndRunRequest, Compil
 	}
 
 	@Override
-	public Class<CompileAndRunRequest> getRequestType() {
-		return CompileAndRunRequest.class;
+	public Class<RunRequest> getRequestType() {
+		return RunRequest.class;
 	}
 
-	public CompileAndRunResponse handle(CompileAndRunRequest request) {
+	public RunResponse handle(RunRequest request) {
 
-		CompileAndRunResponse response = new CompileAndRunResponse();
+		RunResponse response = new RunResponse();
 
 		InMemoryCompiler compiler = new InMemoryCompiler();
 		if (request.preview) {
@@ -58,7 +58,7 @@ public class CompileAndRun implements ActionHandler<CompileAndRunRequest, Compil
 			}
 			SandboxLauncher.Result runResult;
 			try {
-				runResult = sandbox.run(request.mainclass, cmpresult.getClassfiles());
+				runResult = sandbox.runClassFiles(request.mainclass, cmpresult.getClassfiles());
 				response.runstatus = runResult.getStatus();
 				response.output += runResult.getOutput();
 			} catch (IOException | InterruptedException e) {

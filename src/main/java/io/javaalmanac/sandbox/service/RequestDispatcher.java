@@ -31,6 +31,7 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 	public RequestDispatcher() {
 		addHandler(new Version());
 		addHandler(new CompileAndRun());
+		addHandler(new RunFromSource());
 	}
 
 	@SuppressWarnings("unchecked")

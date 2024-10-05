@@ -59,7 +59,7 @@ public class AttacksTest {
 
 		SandboxLauncher sandbox = new SandboxLauncher(Paths.get("./target/sandbox"));
 
-		result = sandbox.run(target.getName(), compileResult.getClassfiles());
+		result = sandbox.runClassFiles(target.getName(), compileResult.getClassfiles());
 	}
 
 }

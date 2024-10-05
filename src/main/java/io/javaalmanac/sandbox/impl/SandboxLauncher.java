@@ -95,13 +95,29 @@ public class SandboxLauncher {
 		return "-XX:TieredStopAtLevel=1";
 	}
 
-	public Result run(String mainClass, Map<String, byte[]> classfiles) throws IOException, InterruptedException {
+	public Result runClassFiles(String mainClass, Map<String, byte[]> classfiles)
+			throws IOException, InterruptedException {
 		List<String> cmd = new ArrayList<>(commandBase);
 		cmd.add(mainClass);
 
 		prepareWorkingDirectory();
-		writeClassFiles(classfiles);
+		writeFiles(classfiles);
 
+		return runJava(cmd);
+	}
+
+	public Result runSourceFiles(String mainSource, Map<String, byte[]> sourcefiles)
+			throws IOException, InterruptedException {
+		List<String> cmd = new ArrayList<>(commandBase);
+		cmd.add(mainSource);
+
+		prepareWorkingDirectory();
+		writeFiles(sourcefiles);
+
+		return runJava(cmd);
+	}
+
+	private Result runJava(List<String> cmd) throws IOException, InterruptedException {
 		ProcessBuilder builder = new ProcessBuilder(cmd);
 		// Do not inherit environment variables
 		builder.environment().clear();
@@ -121,12 +137,11 @@ public class SandboxLauncher {
 			result.status = Result.TIMEOUT_STATUS;
 			process.destroyForcibly();
 		}
-
 		return result;
 	}
 
-	private void writeClassFiles(Map<String, byte[]> classfiles) throws IOException {
-		for (Map.Entry<String, byte[]> e : classfiles.entrySet()) {
+	private void writeFiles(Map<String, byte[]> files) throws IOException {
+		for (Map.Entry<String, byte[]> e : files.entrySet()) {
 			Path file = workdir.resolve(e.getKey());
 			Files.createDirectories(file.getParent());
 			Files.write(file, e.getValue());

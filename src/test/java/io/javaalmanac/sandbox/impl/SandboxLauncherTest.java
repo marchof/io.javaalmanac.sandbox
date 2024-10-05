@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.javaalmanac.sandbox.Java11Compat;
@@ -29,7 +31,7 @@ public class SandboxLauncherTest {
 		sandbox = new SandboxLauncher(Paths.get("./target/sandbox"));
 	}
 
-	private void run(Class<?> target) throws Exception {
+	private void runCompiled(Class<?> target) throws Exception {
 		String source = target.getName().replace('.', '/') + ".java";
 
 		InMemoryCompiler compiler = new InMemoryCompiler();
@@ -39,12 +41,33 @@ public class SandboxLauncherTest {
 
 		SandboxLauncher sandbox = new SandboxLauncher(Paths.get("./target/sandbox"));
 
-		result = sandbox.run(target.getName(), compileResult.getClassfiles());
+		result = sandbox.runClassFiles(target.getName(), compileResult.getClassfiles());
+	}
+
+	private void runSource(Class<?> target) throws Exception {
+		String sourcefile = target.getName().replace('.', '/') + ".java";
+
+		Map<String, byte[]> sourcefiles = Java11Compat.Map.of(sourcefile,
+				Java11Compat.Files.readAllBytes(Paths.get("src/test/java", sourcefile)));
+
+		SandboxLauncher sandbox = new SandboxLauncher(Paths.get("./target/sandbox"));
+
+		result = sandbox.runSourceFiles(sourcefile, sourcefiles);
 	}
 
 	@Test
 	void should_combine_stdout_and_stderr() throws Exception {
-		run(OutErr.class);
+		runCompiled(OutErr.class);
+		assertEquals(0, result.getStatus());
+		assertThat(result.getOutput(), containsString("Hello from Out!"));
+		assertThat(result.getOutput(), containsString("Hello from Err!"));
+	}
+
+	@Test
+	@Disabled("Only available from Java 11 on")
+	void should_combine_stdout_and_stderr_from_source() throws Exception {
+		runSource(OutErr.class);
+		System.out.println(result.getOutput());
 		assertEquals(0, result.getStatus());
 		assertThat(result.getOutput(), containsString("Hello from Out!"));
 		assertThat(result.getOutput(), containsString("Hello from Err!"));
@@ -52,13 +75,13 @@ public class SandboxLauncherTest {
 
 	@Test
 	void should_capture_exit_value() throws Exception {
-		run(Exit.class);
+		runCompiled(Exit.class);
 		assertEquals(42, result.getStatus());
 	}
 
 	@Test
 	void should_capture_vm_failure_message() throws Exception {
-		run(NoMain.class);
+		runCompiled(NoMain.class);
 		assertEquals(1, result.getStatus());
 		System.out.println(result.getOutput());
 		assertThat(result.getOutput(), containsString("Main method not found"));
@@ -66,20 +89,20 @@ public class SandboxLauncherTest {
 
 	@Test
 	void should_cancel_after_timeout() throws Exception {
-		run(Timeout.class);
+		runCompiled(Timeout.class);
 		assertEquals(Result.TIMEOUT_STATUS, result.getStatus());
 	}
 
 	@Test
 	void should_not_produce_additional_output() throws Exception {
-		run(NoOutput.class);
+		runCompiled(NoOutput.class);
 		assertEquals("", result.getOutput());
 	}
 
 	@Test
 	void should_run_with_preview() throws Exception {
 		sandbox.enablePreview();
-		run(NoOutput.class);
+		runCompiled(NoOutput.class);
 		assertEquals("", result.getOutput());
 	}
 
