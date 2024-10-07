@@ -1,6 +1,7 @@
 package io.javaalmanac.sandbox.service;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,14 +16,13 @@ import io.javaalmanac.sandbox.Java11Compat;
 
 public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-	private static final Set<String> ALLOWED_ORIGINS = Java11Compat.Set.of( //
-			"http://localhost", //
-			"http://localhost:1313", //
-			"https://javaalmanac.io", //
-			"https://www.javaalmanac.io", //
-			"https://horstmann.com", //
-			"https://www.horstmann.com", //
-			"https://jkost.github.io/");
+	private static final Set<String> ALLOWED_ORIGINS_HOSTS = Java11Compat.Set.of( //
+			"localhost", //
+			"javaalmanac.io", //
+			"www.javaalmanac.io", //
+			"horstmann.com", //
+			"www.horstmann.com", //
+			"jkost.github.io");
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
@@ -97,7 +97,10 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 	private void addCORSHeaders(ActionHandler<Object, Object> handler, APIGatewayProxyRequestEvent request,
 			APIGatewayProxyResponseEvent response) {
 		String origin = getHeader(request, "origin");
-		if (ALLOWED_ORIGINS.contains(origin)) {
+		if (origin == null) {
+			return;
+		}
+		if (ALLOWED_ORIGINS_HOSTS.contains(URI.create(origin).getHost())) {
 			response.setHeaders(Java11Compat.Map.of( //
 					"Access-Control-Allow-Origin", origin, //
 					"Access-Control-Allow-Headers", "content-type", //
