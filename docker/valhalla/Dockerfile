@@ -1,6 +1,6 @@
-# Build taken from https://github.com/docker-library/openjdk/blob/master/22/jdk/slim-bullseye/Dockerfile
+# Build taken from https://github.com/docker-library/openjdk/blob/master/25/jdk/slim-bullseye/Dockerfile
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 RUN set -eux; \
 	apt-get update; \
@@ -10,7 +10,7 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_HOME /usr/local/openjdk-22
+ENV JAVA_HOME /usr/local/openjdk
 ENV PATH $JAVA_HOME/bin:$PATH
 
 # Default to UTF-8 file.encoding
