@@ -8,6 +8,10 @@ on:
   schedule:
     - cron: '0 5 * * *'
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   sandbox-jar:
 
@@ -130,11 +134,10 @@ jobs:
         name: sandbox.jar
         path: ${{ matrix.jdk.docker }}
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@v4.1.0
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+        role-to-assume: arn:aws:iam::830482727482:role/github-workflow-io.javaalmanac.sandbox
+        aws-region: eu-central-1
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
@@ -148,9 +151,9 @@ jobs:
     - name: Update Lambda
       uses: appleboy/lambda-action@v0.1.9
       with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: ${{ secrets.AWS_REGION }}
+        aws_access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws_region: eu-central-1
         function_name: jdk-sandbox-${{ matrix.jdk.version }}
         image_uri: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.LATEST_TAG }}
     - name: Logout of Amazon ECR
