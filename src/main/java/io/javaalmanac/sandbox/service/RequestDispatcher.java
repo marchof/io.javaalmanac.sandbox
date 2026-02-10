@@ -22,7 +22,8 @@ public class RequestDispatcher implements RequestHandler<APIGatewayProxyRequestE
 			"www.javaalmanac.io", //
 			"horstmann.com", //
 			"www.horstmann.com", //
-			"jkost.github.io");
+			"jkost.github.io", //
+			"mostlynerdless.de");
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
