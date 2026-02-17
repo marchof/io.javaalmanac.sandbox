@@ -153,17 +153,16 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        docker build --build-arg JDK_IMAGE=${{ matrix.jdk.image }} --build-arg "VMARGS=${{ matrix.jdk.vmargs }}" -t sandbox ${{ matrix.jdk.docker }}
+        docker build --provenance=false --build-arg JDK_IMAGE=${{ matrix.jdk.image }} --build-arg "VMARGS=${{ matrix.jdk.vmargs }}" -t sandbox ${{ matrix.jdk.docker }}
         docker tag sandbox $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
+        docker inspect sandbox
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG
     - name: Update Lambda
-      uses: appleboy/lambda-action@v0.1.9
+      uses: aws-actions/aws-lambda-deploy@v1.1.0
       with:
-        aws_access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-        aws_region: eu-central-1
-        function_name: jdk-sandbox-${{ matrix.jdk.version }}
-        image_uri: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.LATEST_TAG }}
+        function-name: jdk-sandbox-${{ matrix.jdk.version }}
+        package-type: Image
+        image-uri: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.LATEST_TAG }}
     - name: Logout of Amazon ECR
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
