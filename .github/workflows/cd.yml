@@ -45,7 +45,7 @@ jobs:
         jdk:
           - version: 8
             docker: docker/jdk
-            image: adoptopenjdk/openjdk8:alpine-slim
+            image: eclipse-temurin:8-alpine
             vmargs: ''
           - version: 9
             docker: docker/jdk
